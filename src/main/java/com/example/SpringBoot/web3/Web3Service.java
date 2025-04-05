@@ -18,8 +18,8 @@ public class Web3Service {
     private final Contract contract;
 
     public Web3Service(Web3j web3j,
-                             @Value("${web3j.private-key}") String privateKey,
-                             @Value("${web3j.contract-address}") String contractAddress) {
+                       @Value("${web3j.private-key}") String privateKey,
+                       @Value("${web3j.contract-address}") String contractAddress) {
         this.web3j = web3j;
         this.credentials = Credentials.create(privateKey);
 

@@ -9,7 +9,7 @@ import org.web3j.protocol.http.HttpService;
 @Configuration
 public class Web3Config {
 
-    @Value("${web3j.client-address}")
+    @Value("${web3j.client-address:address}")
     private String clientAddress;
 
     @Bean

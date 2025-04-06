@@ -1,11 +1,16 @@
 package com.example.SpringBoot.web3;
 
+import com.example.SpringBoot.web3.dto.ProductCountResponse;
+import com.example.SpringBoot.web3.dto.ProductRegistrationEvent;
+import com.example.SpringBoot.web3.dto.RegisterProductResponse;
 import org.springframework.web.bind.annotation.*;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.math.BigInteger;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/blockchain")
+@RequestMapping("/api/web3")
 public class Web3Controller {
 
     private final Web3Service web3Service;
@@ -15,17 +20,21 @@ public class Web3Controller {
     }
 
     @GetMapping("/product-count")
-    public BigInteger getProductCount() throws Exception {
-        return web3Service.getProductCount();
+    public ProductCountResponse getProductCount() throws Exception {
+        BigInteger productCount = web3Service.getProductCount();
+        return new ProductCountResponse("SUCCESS", productCount);
     }
 
     @PostMapping("/register-product")
-    public String registerProduct(@RequestParam String name, @RequestParam BigInteger price) {
-        try {
-            web3Service.registerProduct(name, price);
-            return "Product registered successfully";
-        } catch (Exception e) {
-            return "Error: " + e.getMessage();
-        }
+    @ResponseBody
+    public RegisterProductResponse registerProduct(@RequestParam String name, @RequestParam BigInteger price) throws Exception {
+        TransactionReceipt tx = web3Service.registerProduct(name, price);
+        return new RegisterProductResponse("SUCCESS", tx.getGasUsed(), tx.getBlockNumber());
+    }
+
+    @GetMapping("/registration-events")
+    @ResponseBody
+    public List<ProductRegistrationEvent> getAllProductRegisteredEvents() throws Exception {
+        return web3Service.getAllProductRegisteredEvents();
     }
 }
